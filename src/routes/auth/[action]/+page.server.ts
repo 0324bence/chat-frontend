@@ -30,7 +30,7 @@ export const actions = {
                 maxAge: 60 * 10
             });
             console.log(body);
-            return redirect(301, "/");
+            return redirect(302, "/");
         }
         return { message: body.message };
     },
@@ -52,13 +52,10 @@ export const actions = {
                 password
             })
         });
-        if (res.ok) {
-            return redirect(301, "/auth");
+        if (res.ok || res.status == 201) {
+            return redirect(302, "/auth");
         }
         const body = await res.json();
-        if (res.status === 200) {
-            return redirect(300, "/auth");
-        }
         return { message: body.message };
     }
 } satisfies Actions;

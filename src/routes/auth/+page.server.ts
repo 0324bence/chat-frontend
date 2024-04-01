@@ -1,6 +1,6 @@
-import {type Actions, redirect} from "@sveltejs/kit";
-import type {PageLoad} from "../../../.svelte-kit/types/src/routes/auth/[action]/$types";
+import { type Actions, redirect } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
 
-export const load: PageLoad = ({ params }) => {
-    redirect(301, '/auth/login')
-}
+export const load: PageServerLoad = ({}) => {
+    return redirect(302, "/auth/login");
+};

@@ -18,8 +18,26 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
         return redirect(302, "/auth/login");
     }
     const user = await res.json();
+    const friends = await fetch(apiPath + "/users/getFriends", {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    }).then(res => res.json());
+    const sentRequests = await fetch(apiPath + "/users/getSentFriendRequests", {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    }).then(res => res.json());
+    const incomingRequests = await fetch(apiPath + "/users/getIncomingFriendRequests", {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    }).then(res => res.json());
     return {
         token,
-        user
+        user,
+        friends,
+        sentRequests,
+        incomingRequests
     };
 };

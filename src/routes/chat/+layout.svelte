@@ -41,7 +41,10 @@
 <div id="container">
     <div id="sidebar">
         <div id="sidebar-header">
-            <UserCard name={data.user.name} picture={data.user.picture} />
+            <UserCard name={data.user.name} picture={data.user.picture}></UserCard>
+            <form method="post">
+                <input type="submit" value="Logout" />
+            </form>
         </div>
         <div id="menu-selector">
             <button id="chats" class={!friendsMode ? "selected" : ""}>Beszélgetések</button>

@@ -7,10 +7,13 @@
     import apiPath from "$lib/apiPath";
     import type { LayoutData } from "./$types";
     import redirectToLogin from "$lib/redirectToLogin";
+    import { invalidate, invalidateAll } from "$app/navigation";
 
     export let data: LayoutData;
 
     console.log(data);
+
+    console.log(data.incomingRequests.length);
 
     let friendsMode = true;
     let newFriend = false;
@@ -29,12 +32,38 @@
         fetch(`${apiPath}/users/sendFriendRequest`, {
             method: "POST",
             headers: {
-                Authorization: "Bearer " + data.token
+                Authorization: "Bearer " + data.token,
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({ user: name })
         }).then(() => {
             newFriend = false;
         });
+    }
+    function acceptFriendRequest(name: string) {
+        fetch(`${apiPath}/users/acceptFriendRequest`, {
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + data.token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ user: name })
+        }).then(() => {
+            invalidateAll();
+        });
+    }
+    function declineFriendRequest(name: string) {
+        alert("Decline");
+        // fetch(`${apiPath}/users/declineFriendRequest`, {
+        //     method: "POST",
+        //     headers: {
+        //         Authorization: "Bearer " + data.token,
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({ user: name })
+        // }).then(() => {
+        //     invalidateAll();
+        // });
     }
 </script>
 
@@ -53,6 +82,7 @@
         <div id="list-container">
             {#if friendsMode}
                 <div id="friends-header">
+                    <p>Barátok</p>
                     <button
                         on:click={() => {
                             newFriend = true;
@@ -66,16 +96,82 @@
                         </svg>
                     </button>
                 </div>
+                {#if data.incomingRequests.length > 0}
+                    <div class="friends-list-header">
+                        <p>Bejövő kérések</p>
+                    </div>
+                {/if}
                 {#each data.incomingRequests as friend}
                     <div class="incoming-card-container">
-                        <UserCard name={friend.name} picture={friend.picture} friendButton={true}>
+                        <h2>{friend}</h2>
+                        <button
+                            class="first"
+                            on:click={() => {
+                                //TODO
+                            }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                <path
+                                    d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+                                />
+                            </svg>
+                        </button>
+                        <button
+                            on:click={() => {
+                                acceptFriendRequest(friend);
+                            }}
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                 <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                                 <path
                                     d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
                                 />
                             </svg>
-                        </UserCard>
+                        </button>
+                    </div>
+                {/each}
+                {#if data.sentRequests.length > 0}
+                    <div class="friends-list-header">
+                        <p>Kimenő kérések</p>
+                    </div>
+                {/if}
+                {#each data.sentRequests as friend}
+                    <div class="sent-card-container">
+                        <h2>{friend}</h2>
+                        <!-- <button class="first">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                                <path
+                                    d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+                                />
+                            </svg>
+                        </button>
+                        <button>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path
+                                    d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+                                />
+                            </svg>
+                        </button> -->
+                    </div>
+                {/each}
+                {#each data.friends as friend}
+                    <div class="friend-card-container">
+                        <h2>{friend.name}</h2>
+                        <!-- <button class="first">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                                <path
+                                    d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+                                />
+                            </svg>
+                        </button>
+                        <button>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                <path
+                                    d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
+                                />
+                            </svg>
+                        </button> -->
                     </div>
                 {/each}
             {/if}
@@ -251,15 +347,58 @@
                     border-bottom: 1px solid #ccc;
                 }
 
-                .incoming-card-container {
+                .incoming-card-container,
+                .sent-card-container,
+                .friend-card-container {
                     color: cadetblue;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    padding: 0.5rem;
+                    border-bottom: #ccc 1px solid;
+                    button {
+                        aspect-ratio: 1 / 1;
+                        display: grid;
+                        place-items: center;
+                        height: 100%;
+                        cursor: pointer;
+                        background: none;
+                        border: none;
+                        outline: none;
+                        fill: green;
+
+                        &:hover {
+                            fill: lighten(green, 10%);
+                        }
+                    }
+                    .first {
+                        margin-left: auto;
+                        fill: red;
+
+                        &:hover {
+                            fill: lighten(red, 10%);
+                        }
+                    }
+                }
+
+                .friend-card-container {
+                    color: white;
+                }
+
+                .friends-list-header {
+                    padding: 0.5rem;
+                    border-bottom: 1px solid #ccc;
+                    display: flex;
+                    justify-content: flex-start;
+                    text-decoration: underline;
                 }
 
                 #friends-header {
                     padding: 0.5rem;
                     border-bottom: 1px solid #ccc;
                     display: flex;
-                    justify-content: flex-end;
+                    justify-content: space-between;
+                    text-decoration: underline;
 
                     button {
                         background-color: transparent;

@@ -75,106 +75,76 @@
                 <input type="submit" value="Logout" />
             </form>
         </div>
-        <div id="menu-selector">
-            <button id="chats" class={!friendsMode ? "selected" : ""}>Beszélgetések</button>
-            <button id="friends" class={friendsMode ? "selected" : ""}>Barátok</button>
-        </div>
         <div id="list-container">
-            {#if friendsMode}
-                <div id="friends-header">
-                    <p>Barátok</p>
+            <div id="friends-header">
+                <p>Barátok</p>
+                <button
+                    on:click={() => {
+                        newFriend = true;
+                    }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                        <path
+                            d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"
+                        />
+                    </svg>
+                </button>
+            </div>
+            {#if data.incomingRequests.length > 0}
+                <div class="friends-list-header">
+                    <p>Bejövő kérések</p>
+                </div>
+            {/if}
+            {#each data.incomingRequests as friend}
+                <div class="incoming-card-container">
+                    <h2>{friend}</h2>
                     <button
+                        class="first"
                         on:click={() => {
-                            newFriend = true;
+                            //TODO
                         }}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
                             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                             <path
-                                d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"
+                                d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
+                            />
+                        </svg>
+                    </button>
+                    <button
+                        on:click={() => {
+                            acceptFriendRequest(friend);
+                        }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                            <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                            <path
+                                d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
                             />
                         </svg>
                     </button>
                 </div>
-                {#if data.incomingRequests.length > 0}
-                    <div class="friends-list-header">
-                        <p>Bejövő kérések</p>
+            {/each}
+            {#each data.friends as friend}
+                <a href="." class="friend-card-container">
+                    <h2>{friend.name}</h2>
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path
+                                d="M512 240c0 114.9-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6C73.6 471.1 44.7 480 16 480c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4l0 0 0 0 0 0 0 0 .3-.3c.3-.3 .7-.7 1.3-1.4c1.1-1.2 2.8-3.1 4.9-5.7c4.1-5 9.6-12.4 15.2-21.6c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208z"
+                            />
+                        </svg>
                     </div>
-                {/if}
-                {#each data.incomingRequests as friend}
-                    <div class="incoming-card-container">
-                        <h2>{friend}</h2>
-                        <button
-                            class="first"
-                            on:click={() => {
-                                //TODO
-                            }}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                <path
-                                    d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-                                />
-                            </svg>
-                        </button>
-                        <button
-                            on:click={() => {
-                                acceptFriendRequest(friend);
-                            }}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                                <path
-                                    d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-                {/each}
-                {#if data.sentRequests.length > 0}
-                    <div class="friends-list-header">
-                        <p>Kimenő kérések</p>
-                    </div>
-                {/if}
-                {#each data.sentRequests as friend}
-                    <div class="sent-card-container">
-                        <h2>{friend}</h2>
-                        <!-- <button class="first">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                                <path
-                                    d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-                                />
-                            </svg>
-                        </button>
-                        <button>
+                    <!--<button>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                 <path
                                     d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
                                 />
                             </svg>
                         </button> -->
-                    </div>
-                {/each}
-                {#each data.friends as friend}
-                    <div class="friend-card-container">
-                        <h2>{friend.name}</h2>
-                        <!-- <button class="first">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-                                <path
-                                    d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
-                                />
-                            </svg>
-                        </button>
-                        <button>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                <path
-                                    d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
-                                />
-                            </svg>
-                        </button> -->
-                    </div>
-                {/each}
-            {/if}
+                </a>
+            {/each}
         </div>
         {#if newFriend}
             <div
@@ -348,8 +318,8 @@
                 }
 
                 .incoming-card-container,
-                .sent-card-container,
                 .friend-card-container {
+                    text-decoration: none;
                     color: cadetblue;
                     display: flex;
                     align-items: center;
@@ -383,6 +353,22 @@
 
                 .friend-card-container {
                     color: white;
+
+                    .icon {
+                        aspect-ratio: 1 / 1;
+                        display: grid;
+                        place-items: center;
+                        height: 100%;
+                        background: none;
+                        border: none;
+                        outline: none;
+                        fill: white;
+                        margin-left: auto;
+                    }
+
+                    &:hover {
+                        background-color: rgba(0, 0, 0, 0.1);
+                    }
                 }
 
                 .friends-list-header {

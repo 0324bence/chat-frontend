@@ -23,11 +23,6 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
             Authorization: "Bearer " + token
         }
     }).then(res => res.json());
-    const sentRequests = await fetch(apiPath + "/users/getSentFriendRequests", {
-        headers: {
-            Authorization: "Bearer " + token
-        }
-    }).then(res => res.json());
     const incomingRequests = await fetch(apiPath + "/users/getIncomingFriendRequests", {
         headers: {
             Authorization: "Bearer " + token
@@ -37,7 +32,6 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
         token,
         user,
         friends,
-        sentRequests,
         incomingRequests
     };
 };

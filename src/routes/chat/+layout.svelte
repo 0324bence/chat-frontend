@@ -23,6 +23,9 @@
     function searchUser() {
         searchPromise = fetch(`${apiPath}/users/searchUsersByName?value=${newUserSearch}&onlyBeginning=false`)
             .then(res => res.json())
+            .then((ret: any[]) => {
+                return ret.filter(v => (data.friends as any[]).some(e => e.name == v.name) == false);
+            })
             .catch(() => {
                 redirectToLogin();
             });
@@ -127,7 +130,7 @@
                 </div>
             {/each}
             {#each data.friends as friend}
-                <a href="." class="friend-card-container">
+                <a href="/chat/{friend.name}" class="friend-card-container">
                     <h2>{friend.name}</h2>
                     <div class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -367,6 +370,10 @@
                     }
 
                     &:hover {
+                        background-color: rgba(0, 0, 0, 0.1);
+                    }
+
+                    &:focus {
                         background-color: rgba(0, 0, 0, 0.1);
                     }
                 }

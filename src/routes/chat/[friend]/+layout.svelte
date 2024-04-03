@@ -1,9 +1,37 @@
 <script lang="ts">
+    import type { LayoutData } from "./$types";
+    import apiPath from "$lib/apiPath";
+
+    export let data: LayoutData;
     let message = "";
 
+    let messageResolved = true;
+
     function sendMessage() {
-        console.log(message);
-        message = "";
+        if (!messageResolved) {
+            return;
+        }
+        messageResolved = false;
+        fetch(`${apiPath}/messages/sendTextMessage`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${data.token}`
+            },
+            body: JSON.stringify({
+                user: data.friend,
+                textContent: message
+            })
+        }).then(res => {
+            if (res.ok) {
+                console.log("Message sent");
+                console.log(message);
+                message = "";
+                messageResolved = true;
+            } else {
+                console.error("Message not sent");
+            }
+        });
     }
 </script>
 
@@ -27,17 +55,20 @@
     #chat-container {
         display: flex;
         flex-direction: column;
-        flex-direction: column-reverse;
         align-items: stretch;
         height: 100%;
         width: 100%;
         padding: 0.5rem;
+        overflow-y: auto;
 
         #input-container {
             display: flex;
             gap: 0.5rem;
             align-items: center;
             height: 3.5rem;
+            position: sticky;
+            bottom: 0;
+            // background-color: $main-grey;
 
             #chat-input {
                 flex: 1;

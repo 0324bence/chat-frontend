@@ -11,10 +11,6 @@
 
     export let data: LayoutData;
 
-    console.log(data);
-
-    console.log(data.incomingRequests.length);
-
     let friendsMode = true;
     let newFriend = false;
     let newUserSearch = "";
@@ -74,7 +70,7 @@
     <div id="sidebar">
         <div id="sidebar-header">
             <UserCard name={data.user.name} picture={data.user.picture}></UserCard>
-            <form method="post">
+            <form method="post" action="/chat">
                 <input type="submit" value="Logout" />
             </form>
         </div>

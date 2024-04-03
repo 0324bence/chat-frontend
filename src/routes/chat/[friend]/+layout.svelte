@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { LayoutData } from "./$types";
     import apiPath from "$lib/apiPath";
+    import { invalidateAll } from "$app/navigation";
 
     export let data: LayoutData;
     let message = "";
@@ -28,6 +29,7 @@
                 console.log(message);
                 message = "";
                 messageResolved = true;
+                invalidateAll();
             } else {
                 console.error("Message not sent");
             }

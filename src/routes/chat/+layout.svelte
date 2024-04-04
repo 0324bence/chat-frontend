@@ -20,7 +20,7 @@
         searchPromise = fetch(`${apiPath}/users/searchUsersByName?value=${newUserSearch}&onlyBeginning=false`)
             .then(res => res.json())
             .then((ret: any[]) => {
-                return ret.filter(v => (data.friends as any[]).some(e => e.name == v.name) == false);
+                return ret.filter(v => (data.friends as any[]).some(e => e.name == v.name) == false).filter(x =>  x.name !== data.user.name);
             })
             .catch(() => {
                 redirectToLogin();

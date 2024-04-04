@@ -66,6 +66,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Chat</title>
+</svelte:head>
+
 <div id="container">
     <div id="sidebar">
         <div id="sidebar-header">

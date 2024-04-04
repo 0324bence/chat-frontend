@@ -5,6 +5,10 @@
     export let form: ActionData;
 </script>
 
+<svelte:head>
+    <title>{data.action === "login" ? "Bejelentkezés" : "Regisztráció"}</title>
+</svelte:head>
+
 <div id="container">
     <form method="post">
         <h1>{data.action === "login" ? "Bejelentkezés" : "Regisztráció"}</h1>

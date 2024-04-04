@@ -27,7 +27,7 @@ export const actions = {
             //TODO
             cookies.set("token", body.access_token, {
                 path: "/",
-                maxAge: 60 * 10
+                maxAge: 60 * 60
             });
             console.log(body);
             return redirect(302, "/");

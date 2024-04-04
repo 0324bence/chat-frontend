@@ -150,6 +150,8 @@
             {/each}
         </div>
         {#if newFriend}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
             <div
                 id="new-friend-container"
                 on:click|self={() => {

@@ -7,10 +7,10 @@
 
 <div class="card-container">
     <div class="picture-container">
-        <!--<img
-            src={picture == undefined ? "https://via.placeholder.com/150" : "data:image/png;base64, " + picture}
+        <img
+            src={picture == undefined ? "https://via.placeholder.com/150" : picture}
             alt="Profile"
-        />-->
+        />
     </div>
     <div class="info-container">
         <h2 class="name">{name}</h2>

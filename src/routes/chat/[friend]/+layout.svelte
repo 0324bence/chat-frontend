@@ -6,6 +6,8 @@
     export let data: LayoutData;
     let message = "";
 
+    let chatContaiener: HTMLDivElement;
+
     let messageResolved = true;
 
     function sendMessage() {
@@ -30,14 +32,18 @@
                 message = "";
                 messageResolved = true;
                 invalidateAll();
+                chatContaiener.scrollTo({
+                    top: 9999999999
+                })
             } else {
                 console.error("Message not sent");
+                messageResolved = true;
             }
         });
     }
 </script>
 
-<div id="chat-container">
+<div id="chat-container" bind:this={chatContaiener}>
     <slot />
     <form id="input-container" on:submit|preventDefault={sendMessage}>
         <input type="text" id="chat-input" placeholder="Üzenet" bind:value={message} autocomplete="off" />
@@ -55,22 +61,23 @@
     @import "src/lib/styles/variables.scss";
 
     #chat-container {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
+        display: grid;
+        grid-template-rows: 1fr 3.5rem;
         height: 100%;
         width: 100%;
         padding: 0.5rem;
+        padding-bottom: 0;
         overflow-y: auto;
 
         #input-container {
             display: flex;
             gap: 0.5rem;
+            padding-bottom: 0.5rem;
             align-items: center;
-            height: 3.5rem;
+            height: 100%;
             position: sticky;
             bottom: 0;
-            // background-color: $main-grey;
+            background-color: $main-grey;
 
             #chat-input {
                 flex: 1;

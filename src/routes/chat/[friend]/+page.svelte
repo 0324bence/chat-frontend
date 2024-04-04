@@ -2,10 +2,17 @@
     import type { PageData } from "./$types";
     import { navigating } from "$app/stores";
     import { invalidateAll } from "$app/navigation";
+    import { onMount } from "svelte";
 
     let container: HTMLDivElement;
 
     export let data: PageData;
+
+    onMount(() => {
+        setInterval(() => {
+            invalidateAll();
+        }, 500)
+    })
 </script>
 
 <div id="messages-container" bind:this={container}>
@@ -51,8 +58,8 @@
         align-items: stretch;
         gap: 0.5rem;
         padding: 0.5rem;
-        max-height: 100%;
-        overflow-y: auto;
+        height: 100%;
+        overflow-y: scroll;
 
         .message {
             display: flex;

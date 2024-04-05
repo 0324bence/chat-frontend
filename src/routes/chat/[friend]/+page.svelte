@@ -11,8 +11,8 @@
     onMount(() => {
         setInterval(() => {
             invalidateAll();
-        }, 500)
-    })
+        }, 500);
+    });
 </script>
 
 <div id="messages-container" bind:this={container}>
@@ -59,7 +59,6 @@
         gap: 0.5rem;
         padding: 0.5rem;
         height: 100%;
-        overflow-y: scroll;
 
         .message {
             display: flex;

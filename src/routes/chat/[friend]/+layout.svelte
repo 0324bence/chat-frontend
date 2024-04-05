@@ -50,7 +50,7 @@
 </script>
 
 <div id="chat-container" bind:this={chatContaiener}>
-    <div id="header">
+    <div id="header" class={!$menuState ? "sticky" : ""}>
         <button on:click={() => ($menuState = true)}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                 <path
@@ -60,7 +60,7 @@
         </button>
     </div>
     <slot />
-    <form id="input-container" on:submit|preventDefault={sendMessage}>
+    <form id="input-container" on:submit|preventDefault={sendMessage} class={!$menuState ? "sticky" : ""}>
         <input type="text" id="chat-input" placeholder="Üzenet" bind:value={message} autocomplete="off" />
         <button type="submit" id="send-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -74,6 +74,10 @@
 
 <style lang="scss">
     @import "src/lib/styles/variables.scss";
+
+    .sticky {
+        position: sticky !important;
+    }
 
     @media only screen and (max-width: 900px) {
         #chat-container {
@@ -105,11 +109,17 @@
         height: 100%;
         width: 100%;
         padding: 0.5rem;
+        padding-top: 0;
         padding-bottom: 0;
         overflow-y: auto;
 
         #header {
             display: none;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: $main-grey;
+            padding-top: 0.5rem;
         }
 
         #input-container {

@@ -270,6 +270,7 @@
                     display: flex;
                     flex-direction: column;
                     gap: 0.5rem;
+                    width: 100%;
 
                     h2 {
                         text-align: center;
@@ -281,7 +282,8 @@
 
                         input {
                             padding: 0.5rem;
-                            flex: 1 1;
+                            width: 100%;
+                            flex: 3 1;
                             border: 1px solid #ccc;
                             border-radius: 0.5rem;
                         }
@@ -292,6 +294,8 @@
                         flex-direction: column;
                         align-items: stretch;
                         gap: 0.5rem;
+                        width: 100%;
+                        overflow-x: auto;
 
                         color: black;
 

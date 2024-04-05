@@ -15,6 +15,7 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
     });
     if (res.status !== 200) {
         console.log("Failed to get own username");
+        cookies.delete("token", { path: "/" });
         return redirect(302, "/auth/login");
     }
     const user = await res.json();

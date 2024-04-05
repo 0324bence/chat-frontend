@@ -2,6 +2,8 @@
     import type { LayoutData } from "./$types";
     import apiPath from "$lib/apiPath";
     import { invalidateAll } from "$app/navigation";
+    import menuState from "$lib/stores/menuState";
+    import { onMount } from "svelte";
 
     export let data: LayoutData;
     let message = "";
@@ -9,6 +11,10 @@
     let chatContaiener: HTMLDivElement;
 
     let messageResolved = true;
+
+    onMount(() => {
+        menuState.set(false);
+    });
 
     function sendMessage() {
         if (!messageResolved) {
@@ -34,7 +40,7 @@
                 invalidateAll();
                 chatContaiener.scrollTo({
                     top: 9999999999
-                })
+                });
             } else {
                 console.error("Message not sent");
                 messageResolved = true;
@@ -44,6 +50,15 @@
 </script>
 
 <div id="chat-container" bind:this={chatContaiener}>
+    <div id="header">
+        <button on:click={() => ($menuState = true)}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path
+                    d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
+                />
+            </svg>
+        </button>
+    </div>
     <slot />
     <form id="input-container" on:submit|preventDefault={sendMessage}>
         <input type="text" id="chat-input" placeholder="Üzenet" bind:value={message} autocomplete="off" />
@@ -60,6 +75,30 @@
 <style lang="scss">
     @import "src/lib/styles/variables.scss";
 
+    @media only screen and (max-width: 900px) {
+        #chat-container {
+            grid-template-rows: 2rem 1fr 3.5rem !important;
+
+            #header {
+                display: flex !important;
+                align-items: center;
+
+                button {
+                    height: 100%;
+                    aspect-ratio: 1 / 1;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    outline: none;
+                    fill: white;
+                    padding: 0.2rem;
+                    display: grid;
+                    place-items: center;
+                }
+            }
+        }
+    }
+
     #chat-container {
         display: grid;
         grid-template-rows: 1fr 3.5rem;
@@ -69,13 +108,16 @@
         padding-bottom: 0;
         overflow-y: auto;
 
+        #header {
+            display: none;
+        }
+
         #input-container {
             display: flex;
             gap: 0.5rem;
             padding-bottom: 0.5rem;
             align-items: center;
             height: 100%;
-            position: sticky;
             bottom: 0;
             background-color: $main-grey;
 

@@ -8,6 +8,7 @@
     import type { LayoutData } from "./$types";
     import redirectToLogin from "$lib/redirectToLogin";
     import { invalidate, invalidateAll } from "$app/navigation";
+    import menuState from "$lib/stores/menuState";
 
     export let data: LayoutData;
 
@@ -20,7 +21,9 @@
         searchPromise = fetch(`${apiPath}/users/searchUsersByName?value=${newUserSearch}&onlyBeginning=false`)
             .then(res => res.json())
             .then((ret: any[]) => {
-                return ret.filter(v => (data.friends as any[]).some(e => e.name == v.name) == false).filter(x =>  x.name !== data.user.name);
+                return ret
+                    .filter(v => (data.friends as any[]).some(e => e.name == v.name) == false)
+                    .filter(x => x.name !== data.user.name);
             })
             .catch(() => {
                 redirectToLogin();
@@ -71,7 +74,7 @@
 </svelte:head>
 
 <div id="container">
-    <div id="sidebar">
+    <div id="sidebar" class={$menuState ? "expanded" : ""}>
         <div id="sidebar-header">
             <UserCard name={data.user.name} picture={data.user.picture}></UserCard>
             <form method="post" action="/chat">
@@ -130,7 +133,7 @@
                 </div>
             {/each}
             {#each data.friends as friend}
-                <a href="/chat/{friend.name}" class="friend-card-container">
+                <a href="/chat/{friend.name}" class="friend-card-container" on:click={() => ($menuState = false)}>
                     <h2>{friend.name}</h2>
                     <div class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -206,6 +209,35 @@
 
 <style lang="scss">
     @import "src/lib/styles/variables.scss";
+
+    @media only screen and (max-width: 1400px) {
+        #container {
+            grid-template-columns: 1fr 3fr !important;
+        }
+    }
+
+    @media only screen and (max-width: 900px) {
+        #container {
+            grid-template-columns: 1fr !important;
+
+            #sidebar {
+                transition: transform 0.5s;
+                width: 100%;
+                display: hidden;
+                position: absolute !important;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                transform: translateX(-100%);
+
+                &.expanded {
+                    display: flex;
+                    transform: translateX(0);
+                }
+            }
+        }
+    }
+
     #container {
         display: grid;
         grid-template-columns: 2fr 10fr;
@@ -216,6 +248,7 @@
             flex-direction: column;
             border-right: 1px solid #ccc;
             position: relative;
+            background-color: $main-grey;
 
             #new-friend-container {
                 position: absolute;

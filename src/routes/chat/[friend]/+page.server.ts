@@ -8,17 +8,17 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
         return redirect(302, "/auth");
     }
 
-    const messages = await fetch(`${apiPath}/messages/getMessagesBetweenUsers?user=${params.friend}`, {
-        method: "GET",
-        headers: {
-            Authorization: "Bearer " + token
+    const messages = await fetch(
+        `${apiPath}/messages/getMessagesBetweenUsers?user=${params.friend}`,
+        {
+            method: "GET",
+            headers: {
+                Authorization: "Bearer " + token,
+            },
         }
-    }).then(res => res.json());
-
-    console.log(params.friend);
-    console.log(messages);
+    ).then((res) => res.json());
 
     return {
-        messages
+        messages,
     };
 };

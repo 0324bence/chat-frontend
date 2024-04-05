@@ -17,10 +17,19 @@
     let searchPromise: Promise<any> | undefined = undefined;
 
     function searchUser() {
-        searchPromise = fetch(`${apiPath}/users/searchUsersByName?value=${newUserSearch}&onlyBeginning=false`)
-            .then(res => res.json())
+        searchPromise = fetch(
+            `${apiPath}/users/searchUsersByName?value=${newUserSearch}&onlyBeginning=false`
+        )
+            .then((res) => res.json())
             .then((ret: any[]) => {
-                return ret.filter(v => (data.friends as any[]).some(e => e.name == v.name) == false).filter(x =>  x.name !== data.user.name);
+                return ret
+                    .filter(
+                        (v) =>
+                            (data.friends as any[]).some(
+                                (e) => e.name == v.name
+                            ) == false
+                    )
+                    .filter((x) => x.name !== data.user.name);
             })
             .catch(() => {
                 redirectToLogin();
@@ -32,9 +41,9 @@
             method: "POST",
             headers: {
                 Authorization: "Bearer " + data.token,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({ user: name })
+            body: JSON.stringify({ user: name }),
         }).then(() => {
             newFriend = false;
         });
@@ -44,9 +53,9 @@
             method: "POST",
             headers: {
                 Authorization: "Bearer " + data.token,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({ user: name })
+            body: JSON.stringify({ user: name }),
         }).then(() => {
             invalidateAll();
         });
@@ -64,6 +73,34 @@
         //     invalidateAll();
         // });
     }
+
+    function _arrayBufferToBase64(buffer: ArrayBuffer) {
+        var binary = "";
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+
+    async function setOwnProfilePic(file: File) {
+        if (!file) return;
+        const buffer = await file.arrayBuffer();
+        const base64String = _arrayBufferToBase64(buffer);
+        console.log(base64String);
+
+        fetch(`${apiPath}/users/setPicture`, {
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + data.token,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ picture: base64String }),
+        }).then(() => {
+            console.log("Done");
+        });
+    }
 </script>
 
 <svelte:head>
@@ -73,7 +110,12 @@
 <div id="container">
     <div id="sidebar">
         <div id="sidebar-header">
-            <UserCard name={data.user.name} picture={data.user.picture}></UserCard>
+            <UserCard
+                name={data.user.name}
+                picture={data.user.picture}
+                isOwnPic={true}
+                setOwnPicCallback={setOwnProfilePic}
+            />
             <form method="post" action="/chat">
                 <input type="submit" value="Logout" />
             </form>
@@ -86,7 +128,10 @@
                         newFriend = true;
                     }}
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 640 512"
+                    >
                         <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                         <path
                             d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"
@@ -108,7 +153,10 @@
                             //TODO
                         }}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 384 512"
+                        >
                             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                             <path
                                 d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"
@@ -120,7 +168,10 @@
                             acceptFriendRequest(friend);
                         }}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 448 512"
+                        >
                             <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                             <path
                                 d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"
@@ -133,7 +184,10 @@
                 <a href="/chat/{friend.name}" class="friend-card-container">
                     <h2>{friend.name}</h2>
                     <div class="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                        >
                             <path
                                 d="M512 240c0 114.9-114.6 208-256 208c-37.1 0-72.3-6.4-104.1-17.9c-11.9 8.7-31.3 20.6-54.3 30.6C73.6 471.1 44.7 480 16 480c-6.5 0-12.3-3.9-14.8-9.9c-2.5-6-1.1-12.8 3.4-17.4l0 0 0 0 0 0 0 0 .3-.3c.3-.3 .7-.7 1.3-1.4c1.1-1.2 2.8-3.1 4.9-5.7c4.1-5 9.6-12.4 15.2-21.6c10-16.6 19.5-38.4 21.4-62.9C17.7 326.8 0 285.1 0 240C0 125.1 114.6 32 256 32s256 93.1 256 208z"
                             />
@@ -160,7 +214,11 @@
             >
                 <div id="new-friend-modal">
                     <div id="new-friend-search">
-                        <input type="text" placeholder="Felhasználónév" bind:value={newUserSearch} />
+                        <input
+                            type="text"
+                            placeholder="Felhasználónév"
+                            bind:value={newUserSearch}
+                        />
                         <button on:click={searchUser}>Keresés</button>
                     </div>
                     <div id="new-friend-list">
@@ -176,7 +234,10 @@
                                             friendButton={true}
                                             friendCallback={sendFriendRequest}
                                         >
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 640 512"
+                                            >
                                                 <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
                                                 <path
                                                     d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"

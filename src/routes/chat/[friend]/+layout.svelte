@@ -83,6 +83,10 @@
         #chat-container {
             grid-template-rows: 2rem 1fr 3.5rem !important;
 
+            //scrollbar styles
+            scrollbar-width: thin;
+            scrollbar-color: lighten($main-grey, 20%) $main-grey;
+
             #header {
                 display: flex !important;
                 align-items: center;

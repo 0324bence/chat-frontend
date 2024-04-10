@@ -8,7 +8,6 @@
     import type { LayoutData } from "./$types";
     import redirectToLogin from "$lib/redirectToLogin";
     import { invalidate, invalidateAll } from "$app/navigation";
-    import menuState from "$lib/stores/menuState";
 
     export let data: LayoutData;
 
@@ -67,6 +66,32 @@
         //     invalidateAll();
         // });
     }
+
+    function _arrayBufferToBase64(buffer: ArrayBuffer) {
+        var binary = "";
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+
+    async function setOwnProfilePic(file: File) {
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+        fetch(`${apiPath}/users/setPicture`, {
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + data.token
+            },
+            body: formData
+        }).then(() => {
+            console.log("Done");
+        });
+    }
 </script>
 
 <svelte:head>
@@ -74,7 +99,7 @@
 </svelte:head>
 
 <div id="container">
-    <div id="sidebar" class={$menuState ? "expanded" : ""}>
+    <div id="sidebar">
         <div id="sidebar-header">
             <UserCard
                 name={data.user.name}
@@ -138,7 +163,7 @@
                 </div>
             {/each}
             {#each data.friends as friend}
-                <a href="/chat/{friend.name}" class="friend-card-container" on:click={() => ($menuState = false)}>
+                <a href="/chat/{friend.name}" class="friend-card-container">
                     <h2>{friend.name}</h2>
                     <div class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -214,35 +239,6 @@
 
 <style lang="scss">
     @import "src/lib/styles/variables.scss";
-
-    @media only screen and (max-width: 1400px) {
-        #container {
-            grid-template-columns: 1fr 3fr !important;
-        }
-    }
-
-    @media only screen and (max-width: 900px) {
-        #container {
-            grid-template-columns: 1fr !important;
-
-            #sidebar {
-                transition: transform 0.5s;
-                width: 100%;
-                display: hidden;
-                position: absolute !important;
-                top: 0;
-                left: 0;
-                height: 100vh;
-                transform: translateX(-100%);
-
-                &.expanded {
-                    display: flex;
-                    transform: translateX(0);
-                }
-            }
-        }
-    }
-
     #container {
         display: grid;
         grid-template-columns: 2fr 10fr;
@@ -253,7 +249,6 @@
             flex-direction: column;
             border-right: 1px solid #ccc;
             position: relative;
-            background-color: $main-grey;
 
             #new-friend-container {
                 position: absolute;
@@ -275,7 +270,6 @@
                     display: flex;
                     flex-direction: column;
                     gap: 0.5rem;
-                    width: 100%;
 
                     h2 {
                         text-align: center;
@@ -287,8 +281,7 @@
 
                         input {
                             padding: 0.5rem;
-                            width: 100%;
-                            flex: 3 1;
+                            flex: 1 1;
                             border: 1px solid #ccc;
                             border-radius: 0.5rem;
                         }
@@ -299,8 +292,6 @@
                         flex-direction: column;
                         align-items: stretch;
                         gap: 0.5rem;
-                        width: 100%;
-                        overflow-x: auto;
 
                         color: black;
 

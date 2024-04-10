@@ -55,17 +55,16 @@
         });
     }
     function declineFriendRequest(name: string) {
-        alert("Decline");
-        // fetch(`${apiPath}/users/declineFriendRequest`, {
-        //     method: "POST",
-        //     headers: {
-        //         Authorization: "Bearer " + data.token,
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify({ user: name })
-        // }).then(() => {
-        //     invalidateAll();
-        // });
+        fetch(`${apiPath}/users/declineFriendRequest`, {
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + data.token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ user: name })
+        }).then(() => {
+            invalidateAll();
+        });
     }
 
     function _arrayBufferToBase64(buffer: ArrayBuffer) {
@@ -91,6 +90,7 @@
             body: formData
         }).then(() => {
             console.log("Done");
+            invalidateAll();
         });
     }
 </script>
@@ -143,11 +143,17 @@
             {/if}
             {#each data.incomingRequests as friend}
                 <div class="incoming-card-container">
-                    <h2>{friend}</h2>
+                    <img
+                        src={friend.user1.picture == undefined
+                            ? "https://via.placeholder.com/150"
+                            : friend.user1.picture}
+                        alt="Profile"
+                    />
+                    <h2>{friend.user1.name}</h2>
                     <button
                         class="first"
                         on:click={() => {
-                            //TODO
+                            declineFriendRequest(friend.user1.name);
                         }}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
@@ -159,7 +165,7 @@
                     </button>
                     <button
                         on:click={() => {
-                            acceptFriendRequest(friend);
+                            acceptFriendRequest(friend.user1.name);
                         }}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -173,6 +179,10 @@
             {/each}
             {#each data.friends as friend}
                 <a href="/chat/{friend.name}" class="friend-card-container" on:click={() => ($menuState = false)}>
+                    <img
+                        src={friend.picture == undefined ? "https://via.placeholder.com/150" : friend.picture}
+                        alt="Profile"
+                    />
                     <h2>{friend.name}</h2>
                     <div class="icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -408,6 +418,12 @@
                     gap: 0.5rem;
                     padding: 0.5rem;
                     border-bottom: #ccc 1px solid;
+
+                    img {
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                    }
                     button {
                         aspect-ratio: 1 / 1;
                         display: grid;

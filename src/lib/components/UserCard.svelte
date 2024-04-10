@@ -2,18 +2,16 @@
     export let name: string;
     export let picture: string | undefined = undefined;
     export let friendButton: boolean = false;
-    export let friendCallback: (name: string) => void = (_) => {};
+    export let friendCallback: (name: string) => void = _ => {};
     export let isOwnPic: boolean = false;
-    export let setOwnPicCallback: (file: File) => void = (_) => {};
+    export let setOwnPicCallback: (file: File) => void = _ => {};
 
     function openPicDialog() {
         if (!isOwnPic) {
             return;
         }
 
-        let input = document.querySelector(
-            ".pic-file-input"
-        )! as HTMLInputElement;
+        let input = document.querySelector(".pic-file-input")! as HTMLInputElement;
         input.click();
         console.log(input.files);
     }
@@ -31,9 +29,7 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div class="picture-container" on:click={openPicDialog}>
         <img
-            src={picture == undefined
-                ? "https://via.placeholder.com/150"
-                : picture}
+            src={picture == undefined ? "https://via.placeholder.com/150" : picture}
             alt="Profile"
             class={isOwnPic ? "own-profile-pic" : ""}
         />
@@ -44,7 +40,7 @@
                     type="file"
                     class="pic-file-input"
                     accept="image/*"
-                    on:change={(event) => {
+                    on:change={event => {
                         handleFileSelect(event, setOwnPicCallback);
                     }}
                 />
@@ -71,6 +67,22 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+    }
+
+    :global(.card-container button) {
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        margin-left: auto;
+        aspect-ratio: 1 / 1;
+        height: 25px;
+
+        svg {
+            fill: black;
+        }
     }
 
     .own-profile-pic {
@@ -117,22 +129,6 @@
     .info-container {
         display: flex;
         flex-direction: column;
-    }
-
-    .icon-container {
-        display: grid;
-        place-items: center;
-        cursor: pointer;
-        background-color: transparent;
-        border: none;
-        outline: none;
-        margin-left: auto;
-        aspect-ratio: 1 / 1;
-        height: 25px;
-
-        svg {
-            fill: black;
-        }
     }
 
     .name {

@@ -201,10 +201,10 @@
                 }}
             >
                 <div id="new-friend-modal">
-                    <div id="new-friend-search">
+                    <form id="new-friend-search" on:submit|preventDefault={searchUser}>
                         <input type="text" placeholder="Felhasználónév" bind:value={newUserSearch} />
-                        <button on:click={searchUser}>Keresés</button>
-                    </div>
+                        <button type="submit">Keresés</button>
+                    </form>
                     <div id="new-friend-list">
                         {#if searchPromise != undefined}
                             {#await searchPromise}
@@ -343,7 +343,8 @@
                         }
                     }
 
-                    button {
+                    button,
+                    input[type="submit"] {
                         padding: 0.5rem;
                         flex: 1 1;
                         border: none;

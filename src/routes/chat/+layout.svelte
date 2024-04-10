@@ -86,21 +86,18 @@
 
     async function setOwnProfilePic(file: File) {
         if (!file) return;
-        let reader = new FileReader();
-        reader.onloadend = () => {
-            console.log(reader.result);
-            fetch(`${apiPath}/users/setPicture`, {
-                method: "POST",
-                headers: {
-                    Authorization: "Bearer " + data.token,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ picture: reader.result }),
-            }).then(() => {
-                console.log("Done");
-            });
-        };
-        reader.readAsDataURL(file);
+
+        const formData = new FormData();
+        formData.append("file", file);
+        fetch(`${apiPath}/users/setPicture`, {
+            method: "POST",
+            headers: {
+                Authorization: "Bearer " + data.token,
+            },
+            body: formData,
+        }).then(() => {
+            console.log("Done");
+        });
     }
 </script>
 

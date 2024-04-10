@@ -76,7 +76,12 @@
 <div id="container">
     <div id="sidebar" class={$menuState ? "expanded" : ""}>
         <div id="sidebar-header">
-            <UserCard name={data.user.name} picture={data.user.picture}></UserCard>
+            <UserCard
+                name={data.user.name}
+                picture={data.user.picture}
+                isOwnPic={true}
+                setOwnPicCallback={setOwnProfilePic}
+            />
             <form method="post" action="/chat">
                 <input type="submit" value="Logout" />
             </form>
